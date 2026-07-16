@@ -24,6 +24,7 @@ from litellm.proxy.video_endpoints.utils import (
 from litellm.types.videos.utils import (
     decode_character_id_with_provider,
     decode_video_id_with_provider,
+    encode_video_id_with_provider,
 )
 
 router = APIRouter()
@@ -88,7 +89,7 @@ async def video_generation(
     # Process request using ProxyBaseLLMRequestProcessing
     processor = ProxyBaseLLMRequestProcessing(data=data)
     try:
-        return await processor.base_process_llm_request(
+        response = await processor.base_process_llm_request(
             request=request,
             fastapi_response=fastapi_response,
             user_api_key_dict=user_api_key_dict,
@@ -106,6 +107,16 @@ async def video_generation(
             user_api_base=user_api_base,
             version=version,
         )
+        hidden_params = getattr(response, "_hidden_params", {}) or {}
+        decoded_video_id = decode_video_id_with_provider(response.id)
+        response.id = encode_video_id_with_provider(
+            video_id=decoded_video_id.get("video_id", ""),
+            provider=hidden_params.get("custom_llm_provider")
+            or decoded_video_id.get("custom_llm_provider")
+            or "openai",
+            model_id=hidden_params.get("model_id") or data.get("model"),
+        )
+        return response
     except Exception as e:
         raise await processor._handle_llm_api_exception(
             e=e,
@@ -479,7 +490,7 @@ async def video_remix(
     # Process request using ProxyBaseLLMRequestProcessing
     processor = ProxyBaseLLMRequestProcessing(data=data)
     try:
-        return await processor.base_process_llm_request(
+        response = await processor.base_process_llm_request(
             request=request,
             fastapi_response=fastapi_response,
             user_api_key_dict=user_api_key_dict,
@@ -497,6 +508,16 @@ async def video_remix(
             user_api_base=user_api_base,
             version=version,
         )
+        hidden_params = getattr(response, "_hidden_params", {}) or {}
+        decoded_video_id = decode_video_id_with_provider(response.id)
+        response.id = encode_video_id_with_provider(
+            video_id=decoded_video_id.get("video_id", ""),
+            provider=hidden_params.get("custom_llm_provider")
+            or decoded_video_id.get("custom_llm_provider")
+            or "openai",
+            model_id=hidden_params.get("model_id") or data.get("model"),
+        )
+        return response
     except Exception as e:
         raise await processor._handle_llm_api_exception(
             e=e,
@@ -788,7 +809,7 @@ async def video_edit(
 
     processor = ProxyBaseLLMRequestProcessing(data=data)
     try:
-        return await processor.base_process_llm_request(
+        response = await processor.base_process_llm_request(
             request=request,
             fastapi_response=fastapi_response,
             user_api_key_dict=user_api_key_dict,
@@ -806,6 +827,16 @@ async def video_edit(
             user_api_base=user_api_base,
             version=version,
         )
+        hidden_params = getattr(response, "_hidden_params", {}) or {}
+        decoded_video_id = decode_video_id_with_provider(response.id)
+        response.id = encode_video_id_with_provider(
+            video_id=decoded_video_id.get("video_id", ""),
+            provider=hidden_params.get("custom_llm_provider")
+            or decoded_video_id.get("custom_llm_provider")
+            or "openai",
+            model_id=hidden_params.get("model_id") or data.get("model"),
+        )
+        return response
     except Exception as e:
         raise await processor._handle_llm_api_exception(
             e=e,
@@ -888,7 +919,7 @@ async def video_extension(
 
     processor = ProxyBaseLLMRequestProcessing(data=data)
     try:
-        return await processor.base_process_llm_request(
+        response = await processor.base_process_llm_request(
             request=request,
             fastapi_response=fastapi_response,
             user_api_key_dict=user_api_key_dict,
@@ -906,6 +937,16 @@ async def video_extension(
             user_api_base=user_api_base,
             version=version,
         )
+        hidden_params = getattr(response, "_hidden_params", {}) or {}
+        decoded_video_id = decode_video_id_with_provider(response.id)
+        response.id = encode_video_id_with_provider(
+            video_id=decoded_video_id.get("video_id", ""),
+            provider=hidden_params.get("custom_llm_provider")
+            or decoded_video_id.get("custom_llm_provider")
+            or "openai",
+            model_id=hidden_params.get("model_id") or data.get("model"),
+        )
+        return response
     except Exception as e:
         raise await processor._handle_llm_api_exception(
             e=e,
