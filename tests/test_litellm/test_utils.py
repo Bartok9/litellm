@@ -4741,3 +4741,39 @@ def test_gemini_image_models_do_not_support_reasoning(
         f"{model} incorrectly classified as reasoning-capable. "
         "Add 'supports_reasoning: false' to its model_cost entry."
     )
+
+
+class TestValidateEnvironmentFriendliaiGaladrielBytez:
+    """Preflight must report missing keys for friendliai/galadriel/bytez."""
+
+    def test_friendliai_key_present(self):
+        with patch.dict(os.environ, {"FRIENDLIAI_API_KEY": "k"}, clear=True):
+            result = litellm.validate_environment(model="friendliai/test")
+        assert result["keys_in_environment"] is True
+
+    def test_friendliai_token_alias_present(self):
+        with patch.dict(os.environ, {"FRIENDLI_TOKEN": "t"}, clear=True):
+            result = litellm.validate_environment(model="friendliai/test")
+        assert result["keys_in_environment"] is True
+
+    def test_friendliai_missing(self):
+        with patch.dict(os.environ, {}, clear=True):
+            result = litellm.validate_environment(model="friendliai/test")
+        assert result["keys_in_environment"] is False
+        assert "FRIENDLIAI_API_KEY" in result["missing_keys"]
+
+    def test_galadriel_present_missing(self):
+        with patch.dict(os.environ, {"GALADRIEL_API_KEY": "k"}, clear=True):
+            assert litellm.validate_environment(model="galadriel/test")["keys_in_environment"] is True
+        with patch.dict(os.environ, {}, clear=True):
+            r = litellm.validate_environment(model="galadriel/test")
+            assert r["keys_in_environment"] is False
+            assert "GALADRIEL_API_KEY" in r["missing_keys"]
+
+    def test_bytez_present_missing(self):
+        with patch.dict(os.environ, {"BYTEZ_API_KEY": "k"}, clear=True):
+            assert litellm.validate_environment(model="bytez/test")["keys_in_environment"] is True
+        with patch.dict(os.environ, {}, clear=True):
+            r = litellm.validate_environment(model="bytez/test")
+            assert r["keys_in_environment"] is False
+            assert "BYTEZ_API_KEY" in r["missing_keys"]
