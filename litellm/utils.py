@@ -6141,6 +6141,12 @@ def validate_environment(
                 keys_in_environment = True
             else:
                 missing_keys.append("MOONSHOT_API_KEY")
+        elif custom_llm_provider == "friendliai":
+            # Accept either FRIENDLIAI_API_KEY or legacy FRIENDLI_TOKEN (get_llm_provider_logic).
+            if "FRIENDLIAI_API_KEY" in os.environ or "FRIENDLI_TOKEN" in os.environ:
+                keys_in_environment = True
+            else:
+                missing_keys.append("FRIENDLIAI_API_KEY")
     else:
         ## openai - chatcompletion + text completion
         if (

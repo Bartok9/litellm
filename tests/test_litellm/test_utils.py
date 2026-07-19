@@ -4741,3 +4741,25 @@ def test_gemini_image_models_do_not_support_reasoning(
         f"{model} incorrectly classified as reasoning-capable. "
         "Add 'supports_reasoning: false' to its model_cost entry."
     )
+
+
+
+class TestValidateEnvironmentFriendliai:
+    """friendliai must report FRIENDLIAI_API_KEY / FRIENDLI_TOKEN like get_llm_provider_logic."""
+
+    def test_friendliai_reports_key_present(self):
+        with patch.dict(os.environ, {"FRIENDLIAI_API_KEY": "test-key"}, clear=True):
+            result = litellm.validate_environment(model="friendliai/test-model")
+        assert result["keys_in_environment"] is True
+        assert "FRIENDLIAI_API_KEY" not in result["missing_keys"]
+
+    def test_friendliai_accepts_legacy_token(self):
+        with patch.dict(os.environ, {"FRIENDLI_TOKEN": "legacy-token"}, clear=True):
+            result = litellm.validate_environment(model="friendliai/test-model")
+        assert result["keys_in_environment"] is True
+
+    def test_friendliai_reports_key_missing(self):
+        with patch.dict(os.environ, {}, clear=True):
+            result = litellm.validate_environment(model="friendliai/test-model")
+        assert result["keys_in_environment"] is False
+        assert "FRIENDLIAI_API_KEY" in result["missing_keys"]
