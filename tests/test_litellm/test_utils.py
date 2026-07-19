@@ -4741,3 +4741,20 @@ def test_gemini_image_models_do_not_support_reasoning(
         f"{model} incorrectly classified as reasoning-capable. "
         "Add 'supports_reasoning: false' to its model_cost entry."
     )
+
+
+
+class TestValidateEnvironmentGithub:
+    """github Models provider uses GITHUB_API_KEY (get_llm_provider_logic)."""
+
+    def test_github_reports_key_present(self):
+        with patch.dict(os.environ, {"GITHUB_API_KEY": "test-key"}, clear=True):
+            result = litellm.validate_environment(model="github/gpt-4o")
+        assert result["keys_in_environment"] is True
+        assert "GITHUB_API_KEY" not in result["missing_keys"]
+
+    def test_github_reports_key_missing(self):
+        with patch.dict(os.environ, {}, clear=True):
+            result = litellm.validate_environment(model="github/gpt-4o")
+        assert result["keys_in_environment"] is False
+        assert "GITHUB_API_KEY" in result["missing_keys"]
