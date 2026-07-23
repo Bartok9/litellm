@@ -11191,6 +11191,7 @@
         ]
     },
     "claude-haiku-4-5-20251001": {
+        "supports_native_structured_output": true,
         "cache_creation_input_token_cost": 1.25e-06,
         "cache_creation_input_token_cost_above_1hr": 2e-06,
         "cache_read_input_token_cost": 1e-07,
@@ -11213,6 +11214,7 @@
         "prompt_cache_min_tokens": 4096
     },
     "claude-haiku-4-5": {
+        "supports_native_structured_output": true,
         "cache_creation_input_token_cost": 1.25e-06,
         "cache_creation_input_token_cost_above_1hr": 2e-06,
         "cache_read_input_token_cost": 1e-07,
@@ -11424,6 +11426,7 @@
         "prompt_cache_min_tokens": 1024
     },
     "claude-sonnet-5": {
+        "supports_native_structured_output": true,
         "cache_creation_input_token_cost": 2.5e-06,
         "cache_creation_input_token_cost_above_1hr": 4e-06,
         "cache_read_input_token_cost": 2e-07,
@@ -11809,6 +11812,7 @@
         "prompt_cache_min_tokens": 2048
     },
     "claude-fable-5": {
+        "supports_native_structured_output": true,
         "cache_creation_input_token_cost": 1.25e-05,
         "cache_creation_input_token_cost_above_1hr": 2e-05,
         "cache_read_input_token_cost": 1e-06,
